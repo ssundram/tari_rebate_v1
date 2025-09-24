@@ -4,6 +4,8 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdHhpYW1teGRvbGlreXRsZWVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTU1NDIzMiwiZXhwIjoyMDcxMTMwMjMyfQ.DrRrsNM9lfJ6GTipvjPgeBAQN4g0Ko3eAq7x93O_Ebo'
 const MARKETING_ACCOUNT_ID = '23eda301-d578-4d76-bbf3-305ea27c3732'
 
+// Email functionality handled by serverless function
+
 console.log('✅ Initializing Supabase with environment variables...')
 console.log('🌐 Supabase URL:', supabaseUrl)
 console.log('🔑 Using environment-based configuration')
@@ -101,6 +103,48 @@ function removeFile(index) {
 // Make removeFile available globally
 window.removeFile = removeFile
 
+// Send confirmation email using our serverless function
+async function sendConfirmationEmail(contactEmail, contactName, restaurantName) {
+  try {
+    console.log('📧 Sending confirmation email to:', contactEmail)
+    
+    // Check if we're on localhost (development) or production
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    
+    if (isLocalhost) {
+      console.log('🏠 Localhost detected - skipping email sending for development')
+      console.log('📧 Would send email to:', contactEmail)
+      console.log('📧 Email content: Thank you for purchasing a Tari product...')
+      return true // Return true to simulate successful email sending
+    }
+    
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contactEmail,
+        contactName,
+        restaurantName
+      })
+    })
+    
+    if (response.ok) {
+      const result = await response.json()
+      console.log('✅ Email sent successfully:', result)
+      return true
+    } else {
+      const error = await response.text()
+      console.error('❌ Email sending failed:', error)
+      return false
+    }
+  } catch (error) {
+    console.error('❌ Email sending error:', error)
+    return false
+  }
+}
+
 // Show custom success message
 function showSuccessMessage() {
   console.log('🎉 showSuccessMessage() called')
@@ -112,7 +156,8 @@ function showSuccessMessage() {
       <div style="text-align: center; padding: 2rem; background: #242ff8; border-radius: 8px; color: #ffffff; font-family: 'Tanker', sans-serif;">
         <div style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
         <h3 style="color: #ffffff; margin-bottom: 1rem; font-size: 2rem; font-family: 'Tanker', sans-serif; font-weight: normal;">Thank you for your rebate request!</h3>
-        <p style="color: #ffffff; font-size: 1.2rem; margin: 0; font-family: 'Tanker', sans-serif;">Your request will be processed within 24-48 hours.</p>
+        <p style="color: #ffffff; font-size: 1.2rem; margin: 0 0 1rem 0; font-family: 'Tanker', sans-serif;">Your request will be processed within 24-48 hours.</p>
+        <p style="color: #ffffff; font-size: 1rem; margin: 0; font-family: 'Tanker', sans-serif;">You should receive a confirmation email shortly.</p>
       </div>
     `
     console.log('✅ Form content replaced with success message')
@@ -371,6 +416,15 @@ async function handleFormSubmission(e) {
     
         console.log('✅ Form submitted successfully!')
         console.log('✅ Data saved to Supabase:', data)
+        
+        // Send confirmation email
+        console.log('📧 Sending confirmation email...')
+        const emailSent = await sendConfirmationEmail(contactEmail, contactName, restaurantName)
+        if (emailSent) {
+          console.log('✅ Confirmation email sent successfully')
+        } else {
+          console.log('⚠️ Email sending failed, but form submission was successful')
+        }
         
         console.log('🎯 About to call showSuccessMessage()...')
         // Show custom success message
