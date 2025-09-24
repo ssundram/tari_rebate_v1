@@ -1,10 +1,10 @@
-// Initialize Supabase client with hardcoded values for production
-const supabaseUrl = 'https://mmtxiammxdolikytleee.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdHhpYW1teGRvbGlreXRsZWVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NTQyMzIsImV4cCI6MjA3MTEzMDIzMn0.zWO5pEVlZldsWICF7YOdC_G5_ZvW2R4J6JY6It_DdE0'
-const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdHhpYW1teGRvbGlreXRsZWVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTU1NDIzMiwiZXhwIjoyMDcxMTMwMjMyfQ.DrRrsNM9lfJ6GTipvjPgeBAQN4g0Ko3eAq7x93O_Ebo'
-const MARKETING_ACCOUNT_ID = '23eda301-d578-4d76-bbf3-305ea27c3732'
+import { createClient } from '@supabase/supabase-js'
 
-// Email functionality handled by serverless function
+// Initialize Supabase client with environment variables
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
+const MARKETING_ACCOUNT_ID = import.meta.env.VITE_MARKETING_ACCOUNT_ID
 
 console.log('✅ Initializing Supabase with environment variables...')
 console.log('🌐 Supabase URL:', supabaseUrl)
@@ -12,7 +12,7 @@ console.log('🔑 Using environment-based configuration')
 console.log('🔐 Service role key available:', !!supabaseServiceKey)
 
 // Use service role key for elevated permissions
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseServiceKey)
+const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
 window.supabaseClient = supabaseClient
 
 // Global variables for the form
@@ -67,7 +67,7 @@ function displayUploadedFiles() {
     fileItem.innerHTML = `
       <div class="file-info">
         <span class="file-icon">📄</span>
-        <span class="file-name" style="color: black !important; background: white; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 16px; font-family: 'Libre Baskerville', serif; font-weight: 400;">${file.name}</span>
+        <span class="file-name" style="color: black !important; background: white; padding: 0.3rem 0.5rem; border-radius: 4px; font-size: 1.8rem;">${file.name}</span>
       </div>
       <button type="button" class="remove-file-btn" onclick="removeFile(${index})">×</button>
     `
@@ -103,21 +103,28 @@ function removeFile(index) {
 // Make removeFile available globally
 window.removeFile = removeFile
 
-// Send confirmation email using our serverless function
+// Send confirmation email - localhost testing approach
 async function sendConfirmationEmail(contactEmail, contactName, restaurantName) {
   try {
     console.log('📧 Sending confirmation email to:', contactEmail)
     
-    // Check if we're on localhost (development) or production
+    // For localhost, we'll simulate the email and provide instructions
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     
     if (isLocalhost) {
-      console.log('🏠 Localhost detected - skipping email sending for development')
-      console.log('📧 Would send email to:', contactEmail)
-      console.log('📧 Email content: Thank you for purchasing a Tari product...')
-      return true // Return true to simulate successful email sending
+      console.log('🏠 Localhost detected - CORS prevents direct API calls')
+      console.log('📧 Email would be sent to:', contactEmail)
+      console.log('📧 Subject: Your Rebate Request Has Been Submitted!')
+      console.log('📧 Content: Thank you for purchasing a Tari product...')
+      console.log('💡 To test real emails, run: node test-email.js')
+      
+      // Simulate success
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      console.log('✅ Email simulation completed (use test-email.js for real testing)')
+      return true
     }
     
+    // For production, use the serverless function
     const response = await fetch('/api/send-email', {
       method: 'POST',
       headers: {
@@ -166,7 +173,6 @@ function showSuccessMessage() {
   }
 }
 
-
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   console.log('✅ DOM loaded - initializing Supabase integration...')
@@ -187,18 +193,18 @@ async function loadCampaignData(client) {
     
     if (error) {
       console.error('❌ Database error:', error)
-      } else if (campaigns && campaigns.length > 0) {
-        const campaign = campaigns[0]
-        console.log('✅ Campaign loaded:', campaign.campaign_name)
-        console.log('🎯 Campaign ID:', campaign.id)
-        console.log('🎯 Campaign ID type:', typeof campaign.id)
-        console.log('🎯 Campaign details:', JSON.stringify(campaign, null, 2))
-        
-        CAMPAIGN_ID = campaign.id
-        window.CAMPAIGN_ID = campaign.id // Also set on window for debugging
-        
-        console.log('🔄 After assignment - CAMPAIGN_ID:', CAMPAIGN_ID)
-        console.log('🔄 After assignment - window.CAMPAIGN_ID:', window.CAMPAIGN_ID)
+    } else if (campaigns && campaigns.length > 0) {
+      const campaign = campaigns[0]
+      console.log('✅ Campaign loaded:', campaign.campaign_name)
+      console.log('🎯 Campaign ID:', campaign.id)
+      console.log('🎯 Campaign ID type:', typeof campaign.id)
+      console.log('🎯 Campaign details:', JSON.stringify(campaign, null, 2))
+      
+      CAMPAIGN_ID = campaign.id
+      window.CAMPAIGN_ID = campaign.id // Also set on window for debugging
+      
+      console.log('🔄 After assignment - CAMPAIGN_ID:', CAMPAIGN_ID)
+      console.log('🔄 After assignment - window.CAMPAIGN_ID:', window.CAMPAIGN_ID)
       
       // Update UI with campaign info
       const campaignElement = document.getElementById('campaign-info')
@@ -206,10 +212,10 @@ async function loadCampaignData(client) {
         campaignElement.textContent = campaign.campaign_name
       }
     } else {
-      console.log('⚠️ No active campaigns found')
+      console.warn('⚠️ No active campaigns found for marketing account:', MARKETING_ACCOUNT_ID)
     }
   } catch (error) {
-    console.error('❌ Error loading campaign:', error)
+    console.error('❌ Error loading campaign data:', error)
   }
 }
 
@@ -392,48 +398,48 @@ async function handleFormSubmission(e) {
       fileUrls.push(publicUrl)
     }
     
-        // Insert rebate request
-        const { data, error } = await supabaseClient
-          .from('rebate_requests')
-          .insert([
-            {
-              rebate_campaign_id: CAMPAIGN_ID,
-              contact_name: contactName,
-              restaurant_name: restaurantName,
-              restaurant_address: restaurantAddress,
-              contact_email: contactEmail,
-              preferred_payment_type: paymentType,
-              payment_details: paymentDetails,
-              invoice_files: fileUrls
-              // Removed 'status' and 'created_at' as they may not exist in the schema
-            }
-          ])
+    // Insert rebate request
+    const { data, error } = await supabaseClient
+      .from('rebate_requests')
+      .insert([
+        {
+          rebate_campaign_id: CAMPAIGN_ID,
+          contact_name: contactName,
+          restaurant_name: restaurantName,
+          restaurant_address: restaurantAddress,
+          contact_email: contactEmail,
+          preferred_payment_type: paymentType,
+          payment_details: paymentDetails,
+          invoice_files: fileUrls
+          // Removed 'status' and 'created_at' as they may not exist in the schema
+        }
+      ])
     
     if (error) {
       console.error('❌ Database insert error:', error)
       throw new Error(`Database error: ${error.message}`)
     }
     
-        console.log('✅ Form submitted successfully!')
-        console.log('✅ Data saved to Supabase:', data)
-        
-        // Send confirmation email
-        console.log('📧 Sending confirmation email...')
-        const emailSent = await sendConfirmationEmail(contactEmail, contactName, restaurantName)
-        if (emailSent) {
-          console.log('✅ Confirmation email sent successfully')
-        } else {
-          console.log('⚠️ Email sending failed, but form submission was successful')
-        }
-        
-        console.log('🎯 About to call showSuccessMessage()...')
-        // Show custom success message
-        showSuccessMessage()
-        console.log('🎯 showSuccessMessage() call completed')
-        
-        // Reset form
-        e.target.reset()
-        uploadedFiles = []
+    console.log('✅ Form submitted successfully!')
+    console.log('✅ Data saved to Supabase:', data)
+    
+    // Send confirmation email
+    console.log('📧 Sending confirmation email...')
+    const emailSent = await sendConfirmationEmail(contactEmail, contactName, restaurantName)
+    if (emailSent) {
+      console.log('✅ Confirmation email sent successfully')
+    } else {
+      console.log('⚠️ Email sending failed, but form submission was successful')
+    }
+    
+    console.log('🎯 About to call showSuccessMessage()...')
+    // Show custom success message
+    showSuccessMessage()
+    console.log('🎯 showSuccessMessage() call completed')
+    
+    // Reset form
+    e.target.reset()
+    uploadedFiles = []
     
   } catch (error) {
     console.error('❌ Form submission error:', error)
