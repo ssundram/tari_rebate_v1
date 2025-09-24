@@ -17,10 +17,10 @@ export default async function handler(req, res) {
       to: [contactEmail],
       subject: 'Your Rebate Request Has Been Submitted!',
       html: `
-        <h1>Tari Hot Sauce</h1>
+
         <p>Hi,</p>
-        <p>Thank you for purchasing a Tari product and for uploading your invoice. We've received your submission and started processing your rebate.</p>
-        <p>You can expect your rebate to arrive within 24–48 hours. If you have any questions in the meantime, just reply to this email and we'll be happy to help.</p>
+        <p>Thank you for purchasing Tari products and for uploading your invoice. We've received your submission and are processing your rebate.</p>
+        <p>Please expect your rebate to arrive within 24–48 hours. If you have any questions in the meantime, just reply to this email and we'll be happy to help.</p>
         <p>Warmly,<br>The Tari Team</p>
       `
     }
