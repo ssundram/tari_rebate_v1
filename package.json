@@ -1,0 +1,20 @@
+{
+  "name": "tari_rebate_v1",
+  "version": "1.0.0",
+  "description": "A restaurant rebate submission form for Tari hot sauce promotions.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.4"
+  },
+  "devDependencies": {
+    "vite": "^4.5.0"
+  }
+}

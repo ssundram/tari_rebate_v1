@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tari Hot Sauce - Restaurant Invoice Rebate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="module" src="/main.js"></script>
+  <style>
+    @font-face {
+      font-family: 'PalmerLakePrint';
+      src: url('/fonts/PalmerLakePrint-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Tanker';
+      src: url('/fonts/Tanker-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --primary: #242ff8;
+      --primary-light: rgba(36, 47, 248, 0.1);
+      --secondary: #64748b;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      
+      --radius: 12px;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .form-section {
+      background: #242ff8;
+      padding: 0rem 2rem 3rem 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-logo {
+      width: 100%;
+      max-width: none;
+      height: auto;
+      margin: 0 0 2rem 0;
+      padding: 0;
+      margin-left: -2rem;
+      margin-right: -2rem;
+      width: calc(100% + 4rem);
+      display: block;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .form-title {
+      font-size: 3.375rem;
+      font-weight: normal;
+      font-family: 'Tanker', sans-serif;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      gap: 2rem;
+      max-width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: normal;
+      font-family: 'Tanker', sans-serif;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      font-size: 1.97rem;
+    }
+
+    .form-input {
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      width: 100%;
+      max-width: 100%;
+      color: #0f172a;
+    }
+
+    .form-input::placeholder {
+      font-family: 'PalmerLakePrint', serif;
+      color: #64748b;
+      opacity: 1;
+    }
+
+    .form-input[type="select"],
+    .form-input select,
+    select.form-input {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 1rem center;
+      background-repeat: no-repeat;
+      background-size: 2rem 2rem;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 4rem;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .file-upload {
+      border: 2px dashed #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1rem 0.5rem;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      background: #ffffff;
+      max-width: 100%;
+    }
+
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .file-upload.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .file-upload-icon {
+      font-size: 2.8rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+    }
+
+    .file-upload-text {
+      color: #475569;
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+      margin-bottom: 0.15rem;
+    }
+
+    .file-upload-hint {
+      font-size: 1rem;
+      color: #64748b;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-list {
+      margin-top: 1rem;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .file-icon {
+      color: var(--success);
+    }
+
+    .file-name {
+      font-weight: 500;
+      color: #ffffff;
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+    }
+
+    .file-size {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .remove-file-btn {
+      background: var(--danger);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .remove-file-btn:hover {
+      background: #dc2626;
+      transform: scale(1.1);
+    }
+
+    .submit-btn {
+      background: #ffffff;
+      color: #242ff8;
+      border: 3px solid #ffffff;
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      font-size: 2.25rem;
+      font-family: 'Tanker', sans-serif;
+      font-weight: normal;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .submit-btn:hover {
+      background: #242ff8;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .success-message {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    .error-message {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      
+      .form-section { 
+        padding: 0rem 1.5rem 1.5rem 1.5rem;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .form-logo {
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        width: calc(100% + 3rem);
+      }
+      
+      .form-title {
+        font-size: 2.25rem;
+      }
+      
+      .form-label {
+        font-size: 1.5rem;
+      }
+      
+      .form-input {
+        font-size: 1.5rem;
+        padding: 0.75rem;
+      }
+      
+      .submit-btn {
+        font-size: 1.5rem;
+        padding: 0.75rem 1.5rem;
+      }
+
+      .file-upload-text {
+        font-size: 1.5rem;
+      }
+
+      .file-name {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <form class="form-section" id="invoiceForm">
+      <img src="/images/TARI.png" alt="Tari Hot Sauce Logo" class="form-logo">
+      
+      <h1 class="form-title">Invoice Rebate</h1>
+      <p class="form-subtitle">Submit your restaurant invoice for rebate processing</p>
+      
+      <div class="form-grid">
+        <!-- Contact Name -->
+        <div class="form-group">
+          <label for="contactName" class="form-label">Name of Contact *</label>
+          <input 
+            type="text" 
+            id="contactName" 
+            name="contactName" 
+            class="form-input" 
+            placeholder="Enter contact person's full name"
+            required
+          >
+          </div>
+
+        <!-- Restaurant Name -->
+        <div class="form-group">
+          <label for="restaurantName" class="form-label">Name of Restaurant *</label>
+          <input 
+            type="text" 
+            id="restaurantName" 
+            name="restaurantName" 
+            class="form-input" 
+            placeholder="Enter restaurant name"
+            required
+          >
+        </div>
+
+        <!-- Restaurant Address -->
+        <div class="form-group">
+          <label for="restaurantAddress" class="form-label">Restaurant Address *</label>
+          <textarea 
+            id="restaurantAddress" 
+            name="restaurantAddress" 
+            class="form-input form-textarea" 
+            placeholder="Enter complete restaurant address"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Contact Email -->
+        <div class="form-group">
+          <label for="contactEmail" class="form-label">Contact Email *</label>
+          <input 
+            type="email" 
+            id="contactEmail" 
+            name="contactEmail" 
+            class="form-input" 
+            placeholder="Enter email address"
+            required
+          >
+        </div>
+
+        <!-- Payment Type -->
+        <div class="form-group">
+          <label for="paymentType" class="form-label">Preferred Payment Type *</label>
+          <select 
+            id="paymentType" 
+            name="paymentType" 
+            class="form-input" 
+            required
+          >
+            <option value="">Select payment method</option>
+            <option value="check">Check</option>
+            <option value="ach">ACH Transfer</option>
+            <option value="paypal">PayPal</option>
+            <option value="venmo">Venmo</option>
+          </select>
+        </div>
+
+        <!-- Invoice Upload -->
+        <div class="form-group">
+          <label class="form-label">Invoice Upload *</label>
+          <div class="file-upload" onclick="document.getElementById('invoiceFile').click()">
+            <div class="file-upload-icon">📁</div>
+            <div class="file-upload-text">Click to upload or drag and drop</div>
+            <div class="file-upload-hint">PDF, JPG, PNG up to 10MB</div>
+          </div>
+          <input type="file" id="invoiceFile" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple>
+          <div id="fileList" class="file-list"></div>
+          </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          🚀 Submit Invoice for Rebate
+        </button>
+
+        <div id="successMessage" class="success-message">
+          ✅ Your rebate request has been submitted successfully! You will receive a confirmation email shortly.
+        </div>
+
+        <div id="errorMessage" class="error-message">
+          ❌ There was an error submitting your request. Please try again.
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <footer style="text-align: center; margin-top: 2rem; color: #64748b; font-size: 0.875rem;">
+    <p>
+      © 2024 Tari Hot Sauce Co. All rights reserved. | 
+      Domain: tarihotsauce.com | Powered by Vercel
+      <span style="margin-left: 2rem;">
+        <a href="admin-panel.html" style="color: #64748b; text-decoration: none; font-size: 0.75rem;" onclick="return confirm('Admin access only')">⚙️</a>
+      </span>
+    </p>
+  </footer>
+
+</body>
+</html>

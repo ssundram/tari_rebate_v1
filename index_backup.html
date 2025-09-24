@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invoice Upload - Restaurant Rebate Program</title>
+  <meta name="description" content="Upload your invoice to claim your rebate" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script type="module" src="/main.js"></script>
+  <style>
+    @font-face {
+      font-family: 'PalmerLakePrint';
+      src: url('public/fonts/PalmerLakePrint-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Tanker';
+      src: url('public/fonts/Tanker-Regular.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #dbeafe;
+      --secondary: #64748b;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-accent: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-focus: #3b82f6;
+      --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'PalmerLakePrint', serif;
+      background: #242ff8;
+      color: #ffffff;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .header {
+      background: #242ff8;
+      padding: 3rem 0 0.5rem 0;
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .company-logo {
+      max-height: 150px;
+      max-width: 500px;
+      width: auto;
+      height: auto;
+      margin: 0 auto;
+      padding: 1rem;
+      display: block;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+      position: relative;
+    }
+    
+    .company-tagline {
+      color: #ffffff;
+      font-size: 2.475rem;
+      font-family: 'Tanker', sans-serif;
+      margin: 0;
+      padding: 0.25rem 0 0.5rem 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.5rem 1rem;
+    }
+
+    .main-content {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-section {
+      text-align: center;
+      padding: 0.5rem 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-section {
+      background: #242ff8;
+      padding: 0rem 2rem 3rem 2rem;
+      max-width: 600px;
+      margin: 2rem auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-logo {
+      width: 100%;
+      max-width: none;
+      height: auto;
+      margin: 0 0 2rem 0;
+      padding: 0;
+      margin-left: -2rem;
+      margin-right: -2rem;
+      width: calc(100% + 4rem);
+      display: block;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .form-title {
+      font-size: 3.375rem;
+      font-weight: normal;
+      font-family: 'Tanker', sans-serif;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .form-subtitle {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .form-grid {
+      display: grid;
+      gap: 2rem;
+      max-width: 100%;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-weight: normal;
+      font-family: 'Tanker', sans-serif;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+      font-size: 1.97rem;
+    }
+
+    .form-input {
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      width: 100%;
+      max-width: 100%;
+      color: #0f172a;
+    }
+
+    .form-input::placeholder {
+      font-family: 'PalmerLakePrint', serif;
+      color: #64748b;
+      opacity: 1;
+    }
+
+    .form-input[type="select"],
+    .form-input select,
+    select.form-input {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 1rem center;
+      background-repeat: no-repeat;
+      background-size: 2rem 2rem;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 4rem;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .file-upload {
+      border: 2px dashed #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1rem 0.5rem;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      background: #ffffff;
+      max-width: 100%;
+    }
+
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .file-upload.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .file-upload-icon {
+      font-size: 2.8rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+    }
+
+    .file-upload-text {
+      color: #475569;
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+      margin-bottom: 0.15rem;
+    }
+
+    .file-upload-hint {
+      font-size: 1rem;
+      color: #64748b;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .file-list {
+      margin-top: 1rem;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+    }
+
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .file-icon {
+      color: var(--success);
+    }
+
+    .file-name {
+      font-weight: 500;
+      color: #ffffff;
+      font-size: 2.25rem;
+      font-family: 'PalmerLakePrint', serif;
+    }
+
+    .file-size {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    .remove-file {
+      background: none;
+      border: none;
+      color: var(--error);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: var(--radius);
+      transition: background 0.2s ease;
+    }
+
+    .remove-file:hover {
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .submit-btn {
+      background: #ffffff;
+      color: #242ff8;
+      border: 3px solid #242ff8;
+      padding: 1rem 2rem;
+      border-radius: var(--radius);
+      font-size: 2.25rem;
+      font-family: 'Tanker', sans-serif;
+      font-weight: normal;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    .submit-btn:hover {
+      background: #242ff8;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .success-message {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      display: none;
+    }
+
+    .error-message {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 1rem;
+      border-radius: var(--radius);
+      margin-top: 1rem;
+      display: none;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .form-section { 
+        padding: 0rem 1.5rem 1.5rem 1.5rem; 
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .form-logo {
+        margin-left: -1.5rem;
+        margin-right: -1.5rem;
+        width: calc(100% + 3rem);
+      }
+      .company-logo { max-height: 360px; max-width: 1200px; }
+      .form-logo { max-height: none; max-width: none; }
+      .hero-title { font-size: 2rem; }
+      .hero-section { padding: 2rem 0; }
+    }
+
+    @media (max-width: 640px) {
+      .header-content { padding: 0 1rem; }
+      .company-logo { max-height: 300px; max-width: 1000px; }
+      .form-logo { max-height: none; max-width: none; }
+      .form-title { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <img src="images/tari_logo5_cropped.png" alt="Tari Hot Sauce" class="company-logo">
+      <p class="company-tagline">Restaurant Rebate Program</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Form Section -->
+    <section class="form-section">
+      <!-- Centered logo -->
+      <img src="images/TARI.png" alt="Tari Hot Sauce Products" class="form-logo">
+      
+      <!-- Form content -->
+      <form id="invoiceForm" class="form-grid">
+        <!-- Invoice Upload -->
+        <div class="form-group">
+          <label class="form-label">Invoice Upload *</label>
+          <div class="file-upload" onclick="document.getElementById('invoiceFile').click()">
+            <div class="file-upload-icon">📁</div>
+            <div class="file-upload-text">Click to upload or drag and drop</div>
+            <div class="file-upload-hint">PDF, JPG, PNG up to 10MB</div>
+          </div>
+          <input type="file" id="invoiceFile" class="file-input" accept=".pdf,.jpg,.jpeg,.png" multiple>
+          <div id="fileList" class="file-list"></div>
+          </div>
+
+        <!-- Contact Name -->
+        <div class="form-group">
+          <label for="contactName" class="form-label">Name of Contact *</label>
+          <input 
+            type="text" 
+            id="contactName" 
+            name="contactName" 
+            class="form-input" 
+            placeholder="Enter contact person's full name"
+            required
+          >
+          </div>
+
+        <!-- Restaurant Name -->
+        <div class="form-group">
+          <label for="restaurantName" class="form-label">Name of Restaurant *</label>
+          <input 
+            type="text" 
+            id="restaurantName" 
+            name="restaurantName" 
+            class="form-input" 
+            placeholder="Enter restaurant name"
+            required
+          >
+        </div>
+
+        <!-- Restaurant Address -->
+        <div class="form-group">
+          <label for="restaurantAddress" class="form-label">Address of Restaurant *</label>
+          <textarea 
+            id="restaurantAddress" 
+            name="restaurantAddress" 
+            class="form-input form-textarea" 
+            placeholder="Enter complete restaurant address including city, state, and ZIP code"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Contact Email -->
+        <div class="form-group">
+          <label for="contactEmail" class="form-label">Contact Email *</label>
+          <input 
+            type="email" 
+            id="contactEmail" 
+            name="contactEmail" 
+            class="form-input" 
+            placeholder="Enter email address"
+            required
+          >
+          </div>
+
+        <!-- Preferred Payment Type -->
+        <div class="form-group">
+          <label for="paymentType" class="form-label">Preferred Payment Type *</label>
+          <select 
+            id="paymentType" 
+            name="paymentType" 
+            class="form-input" 
+            required
+          >
+            <option value="Venmo" selected>Venmo</option>
+            <option value="PayPal">PayPal</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          🚀 Submit Invoice for Rebate
+        </button>
+
+        <!-- Messages -->
+        <div id="successMessage" class="success-message">
+          ✅ Invoice submitted successfully! We'll process your rebate within 3-5 business days.
+      </div>
+      
+        <div id="errorMessage" class="error-message">
+          ❌ Please fix the errors above and try again.
+      </div>
+        </form>
+    </section>
+  </div>
+
+  <!-- Footer with discrete admin link -->
+  <footer style="background: #1e293b; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+    <p style="margin: 0; font-size: 0.875rem; color: #64748b;">
+      &copy; 2024 Tari Hot Sauce. All rights reserved.
+    </p>
+    <p style="margin-top: 1rem; font-size: 0.75rem; color: #64748b;">
+      Domain: tarihotsauce.com | Powered by Vercel
+      <span style="margin-left: 2rem;">
+        <a href="admin-panel.html" style="color: #64748b; text-decoration: none; font-size: 0.75rem;" onclick="return confirm('Admin access only')">⚙️</a>
+      </span>
+    </p>
+  </footer>
+
+</body>
+</html>
+    
+    // Campaign ID - you can make this dynamic based on URL parameters or brand
+    const CAMPAIGN_ID = getCampaignId() // Get campaign ID dynamically
+    
+    // Function to get campaign ID (can be from URL, localStorage, or hardcoded)
+    function getCampaignId() {
+      // Option 1: From URL parameter (?campaign=uuid)
+      const urlParams = new URLSearchParams(window.location.search);
+      const campaignFromUrl = urlParams.get('campaign');
+      if (campaignFromUrl) {
+        console.log('📄 Using campaign ID from URL:', campaignFromUrl);
+        return campaignFromUrl;
+      }
+      
+      // Option 2: Use dynamically loaded campaign ID
+      if (window.CURRENT_CAMPAIGN_ID) {
+        console.log('🎯 Using dynamically loaded campaign ID:', window.CURRENT_CAMPAIGN_ID);
+        return window.CURRENT_CAMPAIGN_ID;
+      }
+      
+      // Option 3: Fallback hardcoded ID
+      console.log('⚠️ Using fallback campaign ID');
+      return '00000000-0000-0000-0000-000000000001';
+    }
+
+    // File upload handling
+    const fileInput = document.getElementById('invoiceFile');
+    const fileUpload = document.querySelector('.file-upload');
+    const fileList = document.getElementById('fileList');
+    const form = document.getElementById('invoiceForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+
+    let uploadedFiles = [];
+
+    // Drag and drop functionality
+    fileUpload.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      fileUpload.classList.add('dragover');
+    });
+
+    fileUpload.addEventListener('dragleave', () => {
+      fileUpload.classList.remove('dragover');
+    });
+
+    fileUpload.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileUpload.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit
+          alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+          return;
+        }
+        
+        if (!uploadedFiles.find(f => f.name === file.name)) {
+          uploadedFiles.push(file);
+          displayFile(file);
+        }
+      });
+    }
+
+    function displayFile(file) {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      
+      const fileInfo = document.createElement('div');
+      fileInfo.className = 'file-info';
+      
+      const fileIcon = document.createElement('span');
+      fileIcon.className = 'file-icon';
+      fileIcon.textContent = '📄';
+      
+      const fileDetails = document.createElement('div');
+      
+      const fileName = document.createElement('div');
+      fileName.className = 'file-name';
+      fileName.textContent = file.name;
+      
+      const fileSize = document.createElement('div');
+      fileSize.className = 'file-size';
+      fileSize.textContent = formatFileSize(file.size);
+      
+      fileDetails.appendChild(fileName);
+      fileDetails.appendChild(fileSize);
+      
+      fileInfo.appendChild(fileIcon);
+      fileInfo.appendChild(fileDetails);
+      
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-file';
+      removeBtn.textContent = '✕';
+      removeBtn.onclick = () => removeFile(file.name, fileItem);
+      
+      fileItem.appendChild(fileInfo);
+      fileItem.appendChild(removeBtn);
+      
+      fileList.appendChild(fileItem);
+    }
+
+    function removeFile(fileName, fileElement) {
+      uploadedFiles = uploadedFiles.filter(f => f.name !== fileName);
+      fileElement.remove();
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Hide previous messages
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'none';
+      
+      // Validate form
+      if (uploadedFiles.length === 0) {
+        alert('Please upload at least one invoice file.');
+        return;
+      }
+      
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = '⏳ Submitting...';
+      
+      try {
+        // Get form data
+        const formData = new FormData(form);
+        const contactName = formData.get('contactName');
+        const restaurantName = formData.get('restaurantName');
+        const restaurantAddress = formData.get('restaurantAddress');
+        const contactEmail = formData.get('contactEmail');
+        const paymentType = formData.get('paymentType');
+        
+        // Validate campaign is active
+        const { data: campaign, error: campaignError } = await supabaseClient
+          .from('rebate_campaigns')
+          .select('id, active, start_date, end_date, balance')
+          .eq('id', CAMPAIGN_ID)
+          .single();
+        
+        if (campaignError || !campaign) {
+          throw new Error('Campaign not found');
+        }
+        
+        if (!campaign.active) {
+          throw new Error('Campaign is not active');
+        }
+        
+        const today = new Date().toISOString().split('T')[0];
+        if (today < campaign.start_date || today > campaign.end_date) {
+          throw new Error('Campaign is not currently running');
+        }
+        
+        if (campaign.balance <= 0) {
+          throw new Error('Campaign budget exhausted');
+        }
+        
+        // Upload files to Supabase Storage
+        const fileUrls = [];
+        for (const file of uploadedFiles) {
+          const fileName = `${CAMPAIGN_ID}/${Date.now()}-${file.name}`;
+        const { data, error } = await supabaseClient.storage
+          .from('rebate-invoices')
+          .upload(fileName, file);
+          
+          if (error) {
+            throw error;
+          }
+          
+          // Get public URL
+          const { data: { publicUrl } } = supabaseClient.storage
+            .from('rebate-invoices')
+            .getPublicUrl(fileName);
+          
+          fileUrls.push(publicUrl);
+        }
+        
+        // Insert rebate request
+        const { data, error } = await supabaseClient
+          .from('rebate_requests')
+          .insert([
+            {
+              rebate_campaign_id: CAMPAIGN_ID,
+              contact_name: contactName,
+              restaurant_name: restaurantName,
+              restaurant_address: restaurantAddress,
+              contact_email: contactEmail,
+              preferred_payment_type: paymentType,
+              invoice_files: fileUrls,
+              rebate_status: 'pending'
+            }
+          ]);
+        
+        if (error) {
+          throw error;
+        }
+        
+        // Show success message
+        successMessage.style.display = 'block';
+        form.reset();
+        uploadedFiles = [];
+        fileList.innerHTML = '';
+        
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        errorMessage.style.display = 'block';
+        errorMessage.innerHTML = `❌ Error: ${error.message}`;
+      } finally {
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.textContent = '🚀 Submit Invoice for Rebate';
+      }
+    });
+
+    // Allow customization of company name
+    function updateCompanyName(name) {
+      document.getElementById('companyName').textContent = name;
+    }
+
+    // Example: updateCompanyName('Tari Hot Sauce Co.');
+  </script>
+</body>
+</html>
