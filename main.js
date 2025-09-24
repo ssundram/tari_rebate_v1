@@ -1,10 +1,8 @@
-import { createClient } from '@supabase/supabase-js'
-
-// Initialize Supabase client with environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY
-const MARKETING_ACCOUNT_ID = import.meta.env.VITE_MARKETING_ACCOUNT_ID
+// Initialize Supabase client with hardcoded values for production
+const supabaseUrl = 'https://mmtxiammxdolikytleee.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdHhpYW1teGRvbGlreXRsZWVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NTQyMzIsImV4cCI6MjA3MTEzMDIzMn0.zWO5pEVlZldsWICF7YOdC_G5_ZvW2R4J6JY6It_DdE0'
+const supabaseServiceKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tdHhpYW1teGRvbGlreXRsZWVlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTU1NDIzMiwiZXhwIjoyMDcxMTMwMjMyfQ.DrRrsNM9lfJ6GTipvjPgeBAQN4g0Ko3eAq7x93O_Ebo'
+const MARKETING_ACCOUNT_ID = '23eda301-d578-4d76-bbf3-305ea27c3732'
 
 console.log('✅ Initializing Supabase with environment variables...')
 console.log('🌐 Supabase URL:', supabaseUrl)
@@ -12,7 +10,7 @@ console.log('🔑 Using environment-based configuration')
 console.log('🔐 Service role key available:', !!supabaseServiceKey)
 
 // Use service role key for elevated permissions
-const supabaseClient = createClient(supabaseUrl, supabaseServiceKey)
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseServiceKey)
 window.supabaseClient = supabaseClient
 
 // Global variables for the form
