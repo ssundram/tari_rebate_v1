@@ -5,7 +5,7 @@
   "routes": [
     {
       "src": "/",
-      "dest": "/invoice-upload.html"
+      "dest": "/index.html"
     },
     {
       "src": "/(.*\\.(html|css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|otf))",
