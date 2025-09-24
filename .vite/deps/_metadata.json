@@ -1,0 +1,20 @@
+{
+  "hash": "c95120c8",
+  "browserHash": "5332bfe4",
+  "optimized": {
+    "@supabase/supabase-js": {
+      "src": "../../node_modules/@supabase/supabase-js/dist/module/index.js",
+      "file": "@supabase_supabase-js.js",
+      "fileHash": "bdc0be00",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "browser-RDEJAIT7": {
+      "file": "browser-RDEJAIT7.js"
+    },
+    "chunk-WSPFOE5A": {
+      "file": "chunk-WSPFOE5A.js"
+    }
+  }
+}
